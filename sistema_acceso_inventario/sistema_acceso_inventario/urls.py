@@ -17,6 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from test_app import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    path('', views.Inicio_app, name='pagina_de_inicio'),
+    path('pagina_actualizar_datos/', views.pagina_actualizar_datos, name='pagina_actualizar_datos/'),
+    path('ingresar_datos/', views.ingresar_datos, name='ingresar_datos/'),
+    path('borrar_datos/', views.borrar_datos, name='borrar_datos/'),
+    path('actualizar_datos/', views.actualizar_datos, name='actualizar_datos/')
 ]

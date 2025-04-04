@@ -1,0 +1,96 @@
+{%load static%} <!-- Para poder cargar archivos de la carpeta static -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>actualizar.html</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    
+    <!-- FORMULARIO PARA ACTUALIZAR DATOS -->
+    <form action="#" method="post" id="id_form_test_actualizar">
+      {% csrf_token %}
+      <h1>Actualizar</h1>
+      <label>
+        <input type="number" name="dato1" placeholder="dato1" id="id_dato1"/>
+      </label>
+      <label>
+        <input type="text" name="dato2" placeholder="dato2" id="id_dato2"/>
+      </label>
+      <button type="submit">Actualizar</button>
+    </form>
+
+    <!-- DATOS ANTIGUOS -->
+    <h1>Datos Antiguos</h1>
+
+    <table class="lista-elementos">
+
+    <thead>
+
+      <tr>
+        <th scope="col"><h2>id</h2></th>
+        <th scope="col"><h2>dato1</h2></th>
+        <th scope="col"><h2>dato2</h2></th>
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr>
+        <th scope="col">{{ datos_tabla1_actualizar.0 }}</th>
+        <th scope="col">{{ datos_tabla1_actualizar.1 }}</th>
+        <th scope="col">{{ datos_tabla1_actualizar.2 }}</th>
+      </tr>
+
+    </tbody>
+
+    </table>
+
+    <!-- VOLVER AL INICIO -->
+    <div class="boton-a"><a href="/">Volver</a></div>
+
+  </body>
+
+  <script>
+    // ACTUALIZAR DATOS
+    $(document).ready(function () {
+
+      // Actualizar elemento en sí
+      $("#id_form_test_actualizar").submit(function (event) {
+        event.preventDefault(); // Evitar la acción predeterminada del formulario
+
+        var registro_id = "{{ datos_tabla1_actualizar.0 }}"
+        var dato1 = $("#id_dato1").val();
+        var dato2 = $("#id_dato2").val();
+
+        console.log("registro_id:", registro_id);
+        console.log("dato1:", dato1);
+        console.log("dato2:", dato2);
+
+        $.ajax({
+          type: "POST",
+          url: "/actualizar_datos/",
+          data: {
+            registro_id,
+            dato1,
+            dato2,
+            'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(),
+          },
+          success: function (response) {
+            console.log("Éxito");
+            location.reload();
+          },
+          error: function (error) {
+            console.log("Error");
+            console.log(error);
+          }
+        });
+      });
+    });
+
+  </script>
+
+</html>
