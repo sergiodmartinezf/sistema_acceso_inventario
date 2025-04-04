@@ -1,14 +1,20 @@
 from django.shortcuts import render
 
-# Create your views here.
-
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.db import connection
 
 # Create your views here.
 
-def Inicio_app(request):
+def inicio(request):
+    return render(request, 'HTML/inicio.html')
+
+def inicio_sesion(request):
+    return HttpResponse("ingresado exitosamente") 
+
+    #return HttpResponse("Método no permitido")
+
+def mostrar_datos(request):
     sql1 ="""
     SELECT * 
     FROM test_app_tabla1
@@ -27,7 +33,7 @@ def Inicio_app(request):
     cursor.execute(sql2)
     cantidad_tabla1 = cursor.fetchone()
 
-    return render(request, 'HTML/inicio.html',{'datos_tabla1': datos_tabla1, 'cantidad_tabla1': cantidad_tabla1[0]})
+    return render(request, 'HTML/datos.html',{'datos_tabla1': datos_tabla1, 'cantidad_tabla1': cantidad_tabla1[0]})
 
 def pagina_actualizar_datos(request):
     registro_id = int(request.GET.get('registro_id'))

@@ -1,0 +1,154 @@
+{%load static%} <!-- Para poder cargar archivos de la carpeta static -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>inicio1.html</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    
+    <!-- FORMULARIO PARA INGRESAR DATOS A TABLA1 -->
+    <form action="#" method="post" id="id_form_test">
+      {% csrf_token %}
+
+      <h1>Registro de elementos en tabla1</h1>
+
+      <label>
+        <input type="number" name="dato1" placeholder="dato1" id="id_dato1"/>
+      </label>
+
+      <label>
+        <input type="text" name="dato2" placeholder="dato2" id="id_dato2"/>
+      </label>
+
+      <button type="submit">Ingresar</button>
+
+    </form>
+
+    <!-- DATOS INGRESADOS EN TABLA1 -->
+    <h1>Elementos en tabla1 ({{ cantidad_tabla1 }} elementos)</h1>
+    
+    <table class="lista-elementos">
+
+    <thead class="container">
+
+      <tr>
+        <th scope="col"><h2>id</h2></th>
+        <th scope="col"><h2>dato1</h2></th>
+        <th scope="col"><h2>dato2</h2></th>
+        <th scope="col"><h2>Acción 1</h2></th>
+        <th scope="col"><h2>Acción 2</h2></th>
+      </tr>
+
+    </thead>
+    
+    <tbody>
+    {% for registro in datos_tabla1 %}
+
+      <form action="#" method="post" id="id_form_test_borrar">
+        {% csrf_token %}
+
+        <tr>
+          <th scope="col">{{ registro.0 }}</th>
+          <th scope="col">{{ registro.1 }}</th>
+          <th scope="col">{{ registro.2 }}</th>
+          <th scope="col"><button type="button" class="boton_borrar" data-id="{{ registro.0 }}">Borrar</button></th>
+          <th scope="col"><button type="button" class="boton_actualizar" data-id="{{ registro.0 }}">Actualizar</button></th>
+        </tr>
+
+      </form>
+
+    {% endfor %}
+    </tbody>
+    </table>
+
+  </body>
+
+  <script>
+    // INGRESAR DATO
+    $(document).ready(function () {
+      $("#id_form_test").submit(function (event) {
+        event.preventDefault(); // Evitar la acción predeterminada del formulario
+
+        var dato1 = $("#id_dato1").val();
+        var dato2 = $("#id_dato2").val();
+
+        console.log("dato1:", dato1);
+        console.log("dato2:", dato2);
+
+        $.ajax({
+          type: "POST",
+          url: "/ingresar_datos/",
+          data: {
+            dato1,
+            dato2,
+            'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(),
+          },
+          success: function (response) {
+            console.log("Éxito");
+            location.reload();
+          },
+          error: function (error) {
+            console.log("Error");
+            console.log(error);
+          }
+        });
+      });
+    });
+
+    // BORRAR DATOS
+      $(".boton_borrar").click(function (event) {
+        event.preventDefault(); // Evitar la acción predeterminada del formulario
+
+        var registro_id = $(this).data("id");
+
+        console.log("registro_id:", registro_id);
+
+        $.ajax({
+          type: "POST",
+          url: "/borrar_datos/",
+          data: {
+            registro_id,
+            'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(),
+          },
+          success: function (response) {
+            console.log("Éxito");
+            location.reload();
+          },
+          error: function (error) {
+            console.log("Error");
+            console.log(error);
+          }
+        });
+      });
+
+  // ACTUALIZAR DATOS
+  $(".boton_actualizar").click(function (event) {
+    event.preventDefault(); // Evitar la acción predeterminada del formulario
+
+    var registro_id = $(this).data("id");
+
+    console.log("registro_id:", registro_id);
+
+    $.ajax({
+      type: "GET",
+      url: "/pagina_actualizar_datos/",
+      data: {
+        registro_id,
+        'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(),
+      },
+      success: function (response) {
+        console.log("Éxito");
+        window.location.href = "/pagina_actualizar_datos/?registro_id=" + registro_id;
+      },
+      error: function (error) {
+        console.log("Error");
+        console.log(error);
+      }
+    });
+  });
+  </script>
+
+</html>
